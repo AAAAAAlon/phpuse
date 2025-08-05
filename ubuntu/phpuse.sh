@@ -113,6 +113,66 @@ self_update() {
     exit 0
 }
 
+# 列出已安装的 PHP 版本函数
+list_installed_php_versions() {
+    echo "已安装的 PHP 版本:"
+    # 查找所有已安装的 PHP 版本
+    find /usr/bin -name 'php*' -type f -executable | grep -P '/php\d+\.\d+$' | sort -V | while read -r php_path; do
+        version=$(basename "$php_path" | sed 's/php//')
+        # 检查是否是当前使用的版本
+        if [ "$(readlink -f /etc/alternatives/php)" = "$php_path" ]; then
+            echo "  * ${version} (当前使用)"
+        else
+            echo "  - ${version}"
+        fi
+    done
+
+    # 检查是否有 PHP-FPM 服务
+    echo -e "\nPHP-FPM 服务状态:"
+    systemctl list-unit-files --type=service | grep -P 'php\d+\.\d+-fpm\.service' | sort -V | while read -r service status; do
+        service_name=${service%.service}
+        if systemctl is-active --quiet "$service_name"; then
+            echo "  * ${service_name} (运行中)"
+        else
+            echo "  - ${service_name} (未运行)"
+        fi
+    done
+}
+
+# 新增：安装 PHP 版本函数
+install_php_version() {
+    local version=$1
+    echo "准备安装 PHP ${version}..."
+
+    # 检查是否已安装
+    if [ -f "/usr/bin/php${version}" ]; then
+        echo "PHP ${version} 已经安装"
+        return 0
+    fi
+
+    # 添加 Ondřej 的 PHP PPA
+    if ! grep -q "ondrej/php" /etc/apt/sources.list.d/ondrej-*.list 2>/dev/null; then
+        echo "添加 Ondřej PHP PPA..."
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository -y ppa:ondrej/php
+    fi
+
+    echo "安装 PHP ${version} 和相关扩展..."
+    sudo apt-get update
+    sudo apt-get install -y "php${version}" "php${version}-fpm" "php${version}-cli" \
+        "php${version}-common" "php${version}-mbstring" "php${version}-xml" \
+        "php${version}-mysql" "php${version}-curl" "php${version}-redis" "php${version}-bcmath"
+
+    # 验证安装
+    if [ -f "/usr/bin/php${version}" ]; then
+        echo "PHP ${version} 安装成功!"
+    else
+        echo "PHP ${version} 安装失败!"
+        exit 1
+    fi
+}
+
 # 主逻辑
 case "$1" in
     list)
