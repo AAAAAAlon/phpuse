@@ -48,12 +48,11 @@ self_update() {
             # 备份当前脚本
             BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
             sudo cp "$0" "$BACKUP_FILE"
-            echo "已创建备份: $BACKUP_FILE"
 
             # 替换为最新版本
             chmod +x "$TEMP_FILE"
             sudo mv "$TEMP_FILE" "$0"
-            echo "更新成功！请重新运行命令。"
+            echo "更新成功！"
         else
             echo "当前已是最新版本。"
             rm -f "$TEMP_FILE"
