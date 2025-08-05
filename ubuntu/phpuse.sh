@@ -47,7 +47,7 @@ self_update() {
             echo "发现新版本，正在更新..."
             # 备份当前脚本
             BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
-            cp "$0" "$BACKUP_FILE"
+            sudo cp "$0" "$BACKUP_FILE"
             echo "已创建备份: $BACKUP_FILE"
 
             # 替换为最新版本
