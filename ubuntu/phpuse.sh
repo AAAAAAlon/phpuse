@@ -13,7 +13,58 @@ usage() {
     echo "  $0 install 8.2"
 }
 
-# 新增：列出已安装的 PHP 版本函数
+# 自我更新函数
+self_update() {
+    echo "请选择更新源:"
+    echo "1) GitHub (国际用户推荐)"
+    echo "2) Gitee (中国大陆用户推荐)"
+    read -p "请输入选择 [1-2]: " source_choice
+
+    case $source_choice in
+        1)
+            SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh"
+            echo "使用 GitHub 源进行更新..."
+            ;;
+        2)
+            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh"
+            echo "使用 Gitee 源进行更新..."
+            ;;
+        *)
+            echo "无效选择，更新取消"
+            exit 1
+            ;;
+    esac
+
+    echo "正在检查更新..."
+    TEMP_FILE=$(mktemp)
+
+    # 下载最新版本
+    if curl -sSL "$SCRIPT_URL" > "$TEMP_FILE"; then
+        # 比较版本差异
+        if ! cmp -s "$0" "$TEMP_FILE"; then
+            echo "发现新版本，正在更新..."
+            # 备份当前脚本
+            BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
+            cp "$0" "$BACKUP_FILE"
+            echo "已创建备份: $BACKUP_FILE"
+
+            # 替换为最新版本
+            chmod +x "$TEMP_FILE"
+            sudo mv "$TEMP_FILE" "$0"
+            echo "更新成功！请重新运行命令。"
+        else
+            echo "当前已是最新版本。"
+            rm -f "$TEMP_FILE"
+        fi
+    else
+        echo "错误：无法下载最新版本"
+        rm -f "$TEMP_FILE"
+        exit 1
+    fi
+    exit 0
+}
+
+# 列出已安装的 PHP 版本函数
 list_installed_php_versions() {
     echo "已安装的 PHP 版本:"
     # 查找所有已安装的 PHP 版本
@@ -88,6 +139,9 @@ case "$1" in
         install_php_version "$2"
         exit 0
         ;;
+    self-update)
+          self_update
+          ;;
     -h|--help)
         usage
         exit 0
