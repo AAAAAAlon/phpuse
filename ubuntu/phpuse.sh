@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 在脚本开头定义当前版本号
-CURRENT_VERSION="1.0.1"
+CURRENT_VERSION="1.0.2"
 
 # 新增帮助函数
 usage() {
