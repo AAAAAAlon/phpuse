@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 在脚本开头定义当前版本号
-CURRENT_VERSION="1.0.0"
+CURRENT_VERSION="1.0.1"
 
 # 新增帮助函数
 usage() {
@@ -96,10 +96,6 @@ self_update() {
 
     # 下载最新版本
     if curl -sSL "$SCRIPT_URL" > "$TEMP_FILE"; then
-        # 备份当前脚本
-        BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
-        sudo cp "$0" "$BACKUP_FILE"
-        echo "已创建备份: $BACKUP_FILE"
 
         # 替换为最新版本
         chmod +x "$TEMP_FILE"
