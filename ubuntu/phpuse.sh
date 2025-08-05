@@ -1,18 +1,43 @@
 #!/bin/bash
 
+# 在脚本开头定义当前版本号
+CURRENT_VERSION="1.0.0"
+
 # 新增帮助函数
 usage() {
-    echo "PHP 版本管理工具"
+    echo "PHP 版本管理工具 v${CURRENT_VERSION}"
     echo "用法:"
     echo "  phpuse list               # 列出已安装的 PHP 版本"
     echo "  phpuse <版本号>           # 切换到指定 PHP 版本"
     echo "  phpuse install <版本号>  # 安装指定 PHP 版本"
-    echo "  phpuse self-update  # 更新phpuse"
+    echo "  phpuse self-update        # 更新phpuse"
+    echo "  phpuse -v                 # 显示当前版本"
     echo "示例:"
     echo "  phpuse list"
     echo "  phpuse 8.1"
     echo "  phpuse install 8.2"
     echo "  phpuse self-update"
+    echo "  phpuse -v"
+}
+
+# 显示版本函数
+show_version() {
+   local COLOR_TITLE="\033[1;36m"   # 亮青色
+   local COLOR_VER="\033[1;33m"     # 亮黄色
+   local COLOR_DESC="\033[1;34m"    # 亮蓝色
+   local COLOR_RESET="\033[0m"      # 重置颜色
+
+    echo -e "${COLOR_TITLE}"
+    echo '  _____  _    _  _____   _    _  _____ ______ '
+    echo ' |  __ \| |  | |/ ____| | |  | |/ ____|  ____|'
+    echo ' | |__) | |__| | (___   | |  | | (___ | |__   '
+    echo ' |  ___/|  __  |\___ \  | |  | |\___ \|  __|  '
+    echo ' | |    | |  | |____) | | |__| |____) | |____ '
+    echo ' |_|    |_|  |_|_____/   \____/|_____/|______|'
+    echo -e "${COLOR_RESET}"
+    echo -e "${COLOR_VER}版本: ${CURRENT_VERSION}${COLOR_RESET}"
+    echo -e "${COLOR_DESC}GitHub: https://github.com/AAAAAAlon/phpuse${COLOR_RESET}"
+    exit 0
 }
 
 # 自我更新函数
@@ -25,10 +50,12 @@ self_update() {
     case $source_choice in
         1)
             SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh"
+            VERSION_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/version.txt"
             echo "使用 GitHub 源进行更新..."
             ;;
         2)
             SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh"
+            VERSION_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/version.txt"
             echo "使用 Gitee 源进行更新..."
             ;;
         *)
@@ -38,91 +65,52 @@ self_update() {
     esac
 
     echo "正在检查更新..."
+
+    # 获取远程版本号
+    REMOTE_VERSION=$(curl -sSL "$VERSION_URL" | head -n 1 | tr -d '\n')
+
+    if [ -z "$REMOTE_VERSION" ]; then
+        echo "错误：无法获取远程版本号"
+        exit 1
+    fi
+
+    echo "当前版本: ${CURRENT_VERSION}"
+    echo "最新版本: ${REMOTE_VERSION}"
+
+    # 比较版本号
+    if [ "$CURRENT_VERSION" = "$REMOTE_VERSION" ]; then
+        echo "当前已是最新版本。"
+        exit 0
+    fi
+
+    # 使用 sort -V 进行版本比较
+    HIGHER_VERSION=$(echo -e "$CURRENT_VERSION\n$REMOTE_VERSION" | sort -V | tail -n1)
+
+    if [ "$HIGHER_VERSION" = "$CURRENT_VERSION" ]; then
+        echo "当前版本比远程版本还新，无需更新。"
+        exit 0
+    fi
+
+    echo "发现新版本，正在更新..."
     TEMP_FILE=$(mktemp)
 
     # 下载最新版本
     if curl -sSL "$SCRIPT_URL" > "$TEMP_FILE"; then
-        # 比较版本差异
-        if ! cmp -s "$0" "$TEMP_FILE"; then
-            echo "发现新版本，正在更新..."
-            # 备份当前脚本
-            BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
-            sudo cp "$0" "$BACKUP_FILE"
+        # 备份当前脚本
+        BACKUP_FILE="$0.bak.$(date +%Y%m%d%H%M%S)"
+        sudo cp "$0" "$BACKUP_FILE"
+        echo "已创建备份: $BACKUP_FILE"
 
-            # 替换为最新版本
-            chmod +x "$TEMP_FILE"
-            sudo mv "$TEMP_FILE" "$0"
-            echo "更新成功！"
-        else
-            echo "当前已是最新版本。"
-            rm -f "$TEMP_FILE"
-        fi
+        # 替换为最新版本
+        chmod +x "$TEMP_FILE"
+        sudo mv "$TEMP_FILE" "$0"
+        echo "更新成功！请重新运行脚本以使用新版本。"
     else
         echo "错误：无法下载最新版本"
         rm -f "$TEMP_FILE"
         exit 1
     fi
     exit 0
-}
-
-# 列出已安装的 PHP 版本函数
-list_installed_php_versions() {
-    echo "已安装的 PHP 版本:"
-    # 查找所有已安装的 PHP 版本
-    find /usr/bin -name 'php*' -type f -executable | grep -P '/php\d+\.\d+$' | sort -V | while read -r php_path; do
-        version=$(basename "$php_path" | sed 's/php//')
-        # 检查是否是当前使用的版本
-        if [ "$(readlink -f /etc/alternatives/php)" = "$php_path" ]; then
-            echo "  * ${version} (当前使用)"
-        else
-            echo "  - ${version}"
-        fi
-    done
-
-    # 检查是否有 PHP-FPM 服务
-    echo -e "\nPHP-FPM 服务状态:"
-    systemctl list-unit-files --type=service | grep -P 'php\d+\.\d+-fpm\.service' | sort -V | while read -r service status; do
-        service_name=${service%.service}
-        if systemctl is-active --quiet "$service_name"; then
-            echo "  * ${service_name} (运行中)"
-        else
-            echo "  - ${service_name} (未运行)"
-        fi
-    done
-}
-
-# 新增：安装 PHP 版本函数
-install_php_version() {
-    local version=$1
-    echo "准备安装 PHP ${version}..."
-
-    # 检查是否已安装
-    if [ -f "/usr/bin/php${version}" ]; then
-        echo "PHP ${version} 已经安装"
-        return 0
-    fi
-
-    # 添加 Ondřej 的 PHP PPA
-    if ! grep -q "ondrej/php" /etc/apt/sources.list.d/ondrej-*.list 2>/dev/null; then
-        echo "添加 Ondřej PHP PPA..."
-        sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository -y ppa:ondrej/php
-    fi
-
-    echo "安装 PHP ${version} 和相关扩展..."
-    sudo apt-get update
-    sudo apt-get install -y "php${version}" "php${version}-fpm" "php${version}-cli" \
-        "php${version}-common" "php${version}-mbstring" "php${version}-xml" \
-        "php${version}-mysql" "php${version}-curl" "php${version}-redis" "php${version}-bcmath"
-
-    # 验证安装
-    if [ -f "/usr/bin/php${version}" ]; then
-        echo "PHP ${version} 安装成功!"
-    else
-        echo "PHP ${version} 安装失败!"
-        exit 1
-    fi
 }
 
 # 主逻辑
@@ -141,8 +129,11 @@ case "$1" in
         exit 0
         ;;
     self-update)
-          self_update
-          ;;
+        self_update
+        ;;
+    -v|--version)
+        show_version
+        ;;
     -h|--help)
         usage
         exit 0

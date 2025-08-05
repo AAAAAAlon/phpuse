@@ -16,6 +16,10 @@ sudo chmod +x /usr/local/bin/phpuse
 # 使用
 
 ```bash
-phpuse x.x
+phpuse list               # 列出已安装的 PHP 版本
+phpuse <版本号>           # 切换到指定 PHP 版本
+phpuse install <版本号>  # 安装指定 PHP 版本
+phpuse self-update  # 更新phpuse
+phpuse -v #获取phpuse版本号
 ```
  
