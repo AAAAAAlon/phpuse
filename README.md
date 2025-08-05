@@ -5,7 +5,7 @@
 # 安装
 
 ```bash
-sudo curl -L -O https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/phpuse.sh
+sudo curl -L -O https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh
 sudo chmod +x /usr/local/bin/phpuse
 ```
 
