@@ -105,7 +105,7 @@ case "$1" in
         # 检查目标 PHP 版本是否存在
         if [ ! -f "$PHP_PATH" ]; then
             echo "错误：找不到 PHP ${PHP_VERSION} 的可执行文件"
-            echo "请确认已安装 PHP ${PHP_VERSION} 或者使用 '$0 install ${PHP_VERSION}' 安装"
+            echo "请确认已安装 PHP ${PHP_VERSION} 或者使用 'phpuse install ${PHP_VERSION}' 安装"
             exit 1
         fi
 
