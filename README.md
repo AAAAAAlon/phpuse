@@ -9,6 +9,7 @@
 sudo curl -L -O https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh
 ## gitee下载
 sudo curl -L -O https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh
+sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
 
