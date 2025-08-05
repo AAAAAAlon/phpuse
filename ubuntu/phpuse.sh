@@ -4,13 +4,15 @@
 usage() {
     echo "PHP 版本管理工具"
     echo "用法:"
-    echo "  $0 list               # 列出已安装的 PHP 版本"
-    echo "  $0 <版本号>           # 切换到指定 PHP 版本"
-    echo "  $0 install <版本号>  # 安装指定 PHP 版本"
+    echo "  phpuse list               # 列出已安装的 PHP 版本"
+    echo "  phpuse <版本号>           # 切换到指定 PHP 版本"
+    echo "  phpuse install <版本号>  # 安装指定 PHP 版本"
+    echo "  phpuse self-update  # 更新phpuse"
     echo "示例:"
-    echo "  $0 list"
-    echo "  $0 8.1"
-    echo "  $0 install 8.2"
+    echo "  phpuse list"
+    echo "  phpuse 8.1"
+    echo "  phpuse install 8.2"
+    echo "  phpuse self-update"
 }
 
 # 自我更新函数
