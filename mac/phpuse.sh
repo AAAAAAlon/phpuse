@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 在脚本开头定义当前版本号
-CURRENT_VERSION="1.0.3"
+CURRENT_VERSION="1.0.4"
 
 # 定义颜色变量
 COLOR_RED="\033[1;31m"    # 红色
@@ -11,16 +11,16 @@ COLOR_BLUE="\033[1;34m"    # 亮蓝色
 COLOR_RESET="\033[0m"      # 重置颜色
 
 dangerMsg(){
-  echo "${COLOR_RED}$1${COLOR_RESET}"
+  echo -e "${COLOR_RED}$1${COLOR_RESET}"
 }
 infoMsg(){
-  echo "${COLOR_CYAN}$1${COLOR_RESET}"
+  echo -e "${COLOR_CYAN}$1${COLOR_RESET}"
 }
 warningMsg(){
-  echo "${COLOR_YELLOW}$1${COLOR_RESET}"
+  echo -e "${COLOR_YELLOW}$1${COLOR_RESET}"
 }
 primaryMsg(){
-  echo "${COLOR_BLUE}$1${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}$1${COLOR_RESET}"
 }
 
 # 新增帮助函数
@@ -60,9 +60,9 @@ self_update() {
     infoMsg "请选择更新源:"
     echo "1) GitHub (国际用户推荐)"
     echo "2) Gitee (中国大陆用户推荐)"
-    echo "${COLOR_YELLOW}"
+    echo -e "${COLOR_YELLOW}"
     read -rp "请输入选择 [1-2]: " source_choice
-    echo "${COLOR_RESET}"
+    echo -e "${COLOR_RESET}"
 
     case $source_choice in
         1)
