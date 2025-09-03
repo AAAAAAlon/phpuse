@@ -68,12 +68,10 @@ self_update() {
         1)
             infoMsg "使用 GitHub 源进行更新..."
             SCRIPT_URL="https://github.com/AAAAAAlon/phpuse/releases/latest/download/ubuntu-phpuse.sh"
-            REMOTE_VERSION=$( curl -s https://api.github.com/repos/AAAAAAlon/phpuse/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
             ;;
         2)
             infoMsg "使用 Gitee 源进行更新..."
             SCRIPT_URL="https://gitee.com/ashin_33/phpuse/releases/download/latest/ubuntu-phpuse.sh"
-            REMOTE_VERSION=$(curl -s "https://gitee.com/api/v5/repos/ashin_33/phpuse/releases/latest" | grep '"tag_name"' | cut -d'"' -f6)
             ;;
         *)
             dangerMsg "无效选择，更新取消"
@@ -83,21 +81,6 @@ self_update() {
 
     infoMsg "正在检查更新..."
 
-    if [ -z "$REMOTE_VERSION" ]; then
-        dangerMsg "错误：无法获取远程版本号"
-        exit 1
-    fi
-
-    infoMsg "当前版本: ${CURRENT_VERSION}"
-    warningMsg "最新版本: ${REMOTE_VERSION}"
-
-    # 比较版本号
-    if [ "$CURRENT_VERSION" = "$REMOTE_VERSION" ]; then
-        warningMsg "当前已是最新版本。"
-        exit 0
-    fi
-
-    infoMsg "发现新版本，正在更新..."
     TEMP_FILE=$(mktemp)
 
     # 下载最新版本
