@@ -68,12 +68,12 @@ self_update() {
         1)
             infoMsg "使用 GitHub 源进行更新..."
             SCRIPT_URL="https://github.com/AAAAAAlon/phpuse/releases/latest/download/macos-phpuse.sh"
-            VERSION_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/mac/version.txt"
+            REMOTE_VERSION=$( curl -s https://api.github.com/repos/AAAAAAlon/phpuse/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
             ;;
         2)
             infoMsg "使用 Gitee 源进行更新..."
             SCRIPT_URL="https://gitee.com/ashin_33/phpuse/releases/download/latest/macos-phpuse.sh"
-            VERSION_URL="https://gitee.com/ashin_33/phpuse/raw/master/mac/version.txt"
+            REMOTE_VERSION=$(curl -s "https://gitee.com/api/v5/repos/ashin_33/phpuse/releases/latest" | grep '"tag_name"' | cut -d'"' -f6)
             ;;
         *)
             dangerMsg "无效选择，更新取消"
@@ -83,28 +83,12 @@ self_update() {
 
     echo "正在检查更新..."
 
-    # 获取远程版本号
-    REMOTE_VERSION=$(curl -sSL "$VERSION_URL" | head -n 1 | tr -d '\n')
-
-    if [ -z "$REMOTE_VERSION" ]; then
-        dangerMsg "错误：无法获取远程版本号"
-        exit 1
-    fi
-
     infoMsg "当前版本: ${CURRENT_VERSION}"
     warningMsg "最新版本: ${REMOTE_VERSION}"
 
     # 比较版本号
     if [ "$CURRENT_VERSION" = "$REMOTE_VERSION" ]; then
         warningMsg "当前已是最新版本。"
-        exit 0
-    fi
-
-    # 使用 sort -V 进行版本比较
-    HIGHER_VERSION=$(echo  "$CURRENT_VERSION\n$REMOTE_VERSION" | sort -V | tail -n1)
-
-    if [ "$HIGHER_VERSION" = "$CURRENT_VERSION" ]; then
-        warningMsg "当前版本比远程版本还新，无需更新。"
         exit 0
     fi
 

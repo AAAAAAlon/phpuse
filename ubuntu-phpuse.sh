@@ -97,14 +97,6 @@ self_update() {
         exit 0
     fi
 
-    # 使用 sort -V 进行版本比较
-    HIGHER_VERSION=$(echo -e "$CURRENT_VERSION\n$REMOTE_VERSION" | sort -V | tail -n1)
-
-    if [ "$HIGHER_VERSION" = "$CURRENT_VERSION" ]; then
-        warningMsg "当前版本比远程版本还新，无需更新。"
-        exit 0
-    fi
-
     infoMsg "发现新版本，正在更新..."
     TEMP_FILE=$(mktemp)
 
