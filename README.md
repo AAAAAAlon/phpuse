@@ -20,7 +20,7 @@ sudo chmod +x /usr/local/bin/phpuse
 ### gitee 安装
 
 ```bash
-sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/latest/download/ubuntu-phpuse.sh"
+sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/download/latest/ubuntu-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
@@ -48,7 +48,7 @@ sudo chmod +x /usr/local/bin/phpuse
 ### gitee 安装
 
 ```bash
-sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/latest/download/macos-phpuse.sh"
+sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/download/latest/macos-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
