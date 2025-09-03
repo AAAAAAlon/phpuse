@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 在脚本开头定义当前版本号
-CURRENT_VERSION="1.0.3"
+CURRENT_VERSION="1.0.0"
 
 # 定义颜色变量
 COLOR_RED="\033[1;31m"    # 红色
@@ -66,14 +66,14 @@ self_update() {
 
     case $source_choice in
         1)
-            SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh"
-            VERSION_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/version.txt"
             infoMsg "使用 GitHub 源进行更新..."
+            SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh"
+            REMOTE_VERSION=$( curl -s https://api.github.com/repos/AAAAAAlon/phpuse/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
             ;;
         2)
-            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh"
-            VERSION_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/version.txt"
             infoMsg "使用 Gitee 源进行更新..."
+            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh"
+            REMOTE_VERSION=$(curl -s "https://gitee.com/api/v5/repos/ashin_33/phpuse/releases/latest" | grep '"tag_name"' | cut -d'"' -f6)
             ;;
         *)
             dangerMsg "无效选择，更新取消"
@@ -82,9 +82,6 @@ self_update() {
     esac
 
     infoMsg "正在检查更新..."
-
-    # 获取远程版本号
-    REMOTE_VERSION=$(curl -sSL "$VERSION_URL" | head -n 1 | tr -d '\n')
 
     if [ -z "$REMOTE_VERSION" ]; then
         dangerMsg "错误：无法获取远程版本号"

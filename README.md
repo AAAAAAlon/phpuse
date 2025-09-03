@@ -12,8 +12,7 @@
 ### github 安装
 
 ```bash
-## github下载
-sudo curl -L -O https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh
+sudo curl -L -o "phpuse.sh" "https://github.com/AAAAAAlon/phpuse/releases/latest/download/ubuntu-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
@@ -21,7 +20,7 @@ sudo chmod +x /usr/local/bin/phpuse
 ### gitee 安装
 
 ```bash
-sudo curl -L -O https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh
+sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/latest/download/ubuntu-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
@@ -41,8 +40,7 @@ phpuse -v #获取phpuse版本号
 ### github 安装
 
 ```bash
-## github下载
-sudo curl -L -O https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/mac/phpuse.sh
+sudo curl -L -o "phpuse.sh" "https://github.com/AAAAAAlon/phpuse/releases/latest/download/macos-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```
@@ -50,7 +48,7 @@ sudo chmod +x /usr/local/bin/phpuse
 ### gitee 安装
 
 ```bash
-sudo curl -L -O https://gitee.com/ashin_33/phpuse/raw/master/mac/phpuse.sh
+sudo curl -L -o "phpuse.sh" "https://gitee.com/ashin_33/phpuse/releases/latest/download/macos-phpuse.sh"
 sudo mv phpuse.sh /usr/local/bin/phpuse
 sudo chmod +x /usr/local/bin/phpuse
 ```

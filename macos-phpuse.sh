@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 在脚本开头定义当前版本号
-CURRENT_VERSION="1.0.4"
+CURRENT_VERSION="1.0.0"
 
 # 定义颜色变量
 COLOR_RED="\033[1;31m"    # 红色
