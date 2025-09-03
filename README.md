@@ -1,7 +1,9 @@
 # 说明
 
-> 该脚本用于切换ubuntu系统或mac系统中的php版本
-> 可切换ubuntu系统中apt安装的php及macos系统中brew安装的php,后续安装扩展之类的动作可继续使用apt或者pecl等操作
+> 该脚本用于切换ubuntu系统或mac系统中的php版本,后续安装扩展之类的动作可继续使用apt或者pecl等操作
+ 
+- [x] ubuntu apt
+- [x] macos brew
 
 # 安装
 
