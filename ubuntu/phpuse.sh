@@ -60,9 +60,9 @@ self_update() {
      infoMsg "请选择更新源:"
     echo "1) GitHub (国际用户推荐)"
     echo "2) Gitee (中国大陆用户推荐)"
-    echo "${COLOR_YELLOW}"
+    echo -e "${COLOR_YELLOW}"
     read -rp "请输入选择 [1-2]: " source_choice
-    echo "${COLOR_RESET}"
+    echo -e "${COLOR_RESET}"
 
     case $source_choice in
         1)
