@@ -113,7 +113,7 @@ list_installed_php_versions() {
     done
 
     # 检查是否有 PHP-FPM 服务
-    infoMsg  "\nPHP-FPM 服务状态:"
+    infoMsg  "PHP-FPM 服务状态:"
     systemctl list-unit-files --type=service | grep -P 'php\d+\.\d+-fpm\.service' | sort -V | while read -r service status; do
         service_name=${service%.service}
         if systemctl is-active --quiet "$service_name"; then
@@ -200,6 +200,20 @@ changeVersion(){
               done
           fi
 
+          # 取消开机自启动
+           INSTALLED_FPM_SERVICES=$(systemctl list-unit-files --type=service | grep -oP 'php[0-9.]+-fpm\.service' || true)
+
+              # 禁用所有 php-fpm 服务的开机自启动
+              if [ -n "$INSTALLED_FPM_SERVICES" ]; then
+                  for service in $INSTALLED_FPM_SERVICES; do
+                      service_name="${service%.service}"
+                      if systemctl is-enabled "$service_name" >/dev/null 2>&1; then
+                          warningMsg "禁用开机自启动: $service_name"
+                          sudo systemctl disable "$service_name" >/dev/null 2>&1
+                      fi
+                  done
+              fi
+
           # 启动目标 PHP-FPM 服务
           if systemctl list-unit-files | grep -q "^${PHP_FPM_SERVICE}.service"; then
               infoMsg "正在启动 ${PHP_FPM_SERVICE}..."
@@ -216,6 +230,21 @@ changeVersion(){
           else
               warningMsg "警告：找不到 ${PHP_FPM_SERVICE} 服务，跳过 FPM 处理"
           fi
+
+          # 启用目标版本的开机自启动
+              if systemctl list-unit-files | grep -q "^${PHP_FPM_SERVICE}.service"; then
+                  infoMsg "启用开机自启动: ${PHP_FPM_SERVICE}"
+                  sudo systemctl enable "$PHP_FPM_SERVICE" >/dev/null 2>&1
+
+                  # 检查是否启用成功
+                  if systemctl is-enabled "$PHP_FPM_SERVICE" >/dev/null 2>&1; then
+                      echo "已成功设置 ${PHP_FPM_SERVICE} 开机自启动"
+                  else
+                      warningMsg "警告：${PHP_FPM_SERVICE} 开机自启动设置失败"
+                  fi
+              else
+                  warningMsg "警告：找不到 ${PHP_FPM_SERVICE} 服务，无法设置开机自启动"
+              fi
 
           # 显示最终结果
           echo ""
@@ -247,7 +276,7 @@ case "$1" in
         usage
         exit 0
         ;;
-    php*)
+    [0-9]*.[0-9]*)
         changeVersion "$1"
         ;;
     *)
