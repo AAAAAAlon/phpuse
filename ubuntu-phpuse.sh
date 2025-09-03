@@ -67,12 +67,12 @@ self_update() {
     case $source_choice in
         1)
             infoMsg "使用 GitHub 源进行更新..."
-            SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/ubuntu/phpuse.sh"
+            SCRIPT_URL="https://github.com/AAAAAAlon/phpuse/releases/latest/download/ubuntu-phpuse.sh"
             REMOTE_VERSION=$( curl -s https://api.github.com/repos/AAAAAAlon/phpuse/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
             ;;
         2)
             infoMsg "使用 Gitee 源进行更新..."
-            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/ubuntu/phpuse.sh"
+            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/releases/download/latest/ubuntu-phpuse.sh"
             REMOTE_VERSION=$(curl -s "https://gitee.com/api/v5/repos/ashin_33/phpuse/releases/latest" | grep '"tag_name"' | cut -d'"' -f6)
             ;;
         *)

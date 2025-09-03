@@ -66,14 +66,14 @@ self_update() {
 
     case $source_choice in
         1)
-            SCRIPT_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/mac/phpuse.sh"
-            VERSION_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/mac/version.txt"
             infoMsg "使用 GitHub 源进行更新..."
+            SCRIPT_URL="https://github.com/AAAAAAlon/phpuse/releases/latest/download/macos-phpuse.sh"
+            VERSION_URL="https://raw.githubusercontent.com/AAAAAAlon/phpuse/master/mac/version.txt"
             ;;
         2)
-            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/raw/master/mac/phpuse.sh"
-            VERSION_URL="https://gitee.com/ashin_33/phpuse/raw/master/mac/version.txt"
             infoMsg "使用 Gitee 源进行更新..."
+            SCRIPT_URL="https://gitee.com/ashin_33/phpuse/releases/download/latest/macos-phpuse.sh"
+            VERSION_URL="https://gitee.com/ashin_33/phpuse/raw/master/mac/version.txt"
             ;;
         *)
             dangerMsg "无效选择，更新取消"
