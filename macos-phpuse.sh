@@ -187,7 +187,7 @@ install_php_version() {
 
         # 提示用户运行 link 命令
         infoMsg "请运行以下命令链接 PHP ${version}:"
-        infoMsg "brew link --overwrite --force ${version}"
+        infoMsg "brew link --overwrite ${version}"
     else
         dangerMsg "${version} 安装失败!"
         exit 1
